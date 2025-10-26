@@ -15,7 +15,7 @@ program
     .option('-s, --sort <sort>', 'return sorted expenses by createdAt', '')
     .option('-c, --category <category>', 'shows expenses that match given category', '')
     .option('-p, --page <page>', 'shows one specified page of expenses', '1')
-    .option('-t, --take <take>', 'number of expenses to show on single page', '3')
+    .option('-t, --take <take>', 'number of expenses to show on single page', '5')
     .description('Show all expenses from expenses.json')
     .action(async (opts) => {
         const expenseData = await readFile('expenses.json', true);
@@ -39,7 +39,7 @@ program
             }
         }
         const page = Number(opts.page);
-        const take = Math.min(Number(opts.take), 3);
+        const take = Math.min(Number(opts.take), 5);
         console.log(expenseData.slice((page - 1) * take, take * page))
     });
 
@@ -147,5 +147,8 @@ program
         console.log(`Expense with id ${id} has been updated.`);
 
     })
+
+//დამატებითი ფუნქციონალები, რომლებიც ჩემი აზრით, "გამოადგება" ამ CLI-ს.
+
 
 program.parse();
