@@ -10,5 +10,4 @@ export async function readFile(filePath, isParsed){
 export async function writeFile(filePath, data){
     if(!filePath || !data) return
     await fs.writeFile(filePath, typeof data === 'string' ? data : JSON.stringify(data))
-    console.log('written successfully')
 }
