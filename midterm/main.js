@@ -13,16 +13,29 @@ program
 program
     .command('show')
     .option('-s, --sort <sort>', 'return sorted expenses by price', '')
+    .option('-c, --category <category>', 'shows expenses that match given category', '')
     .description('Show all expenses from expenses.json')
     .action(async (opts) => {
-        const readData = await readFile('./expenses.json', true);
-        if(opts.sort === 'asc'){
-            readData.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        const expenseData = await readFile('./expenses.json', true);
+        if (opts.sort) {
+            if (opts.sort === 'asc') {
+                expenseData.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+                console.log(expenseData);
+                return;
+            }
+            else if (opts.sort === 'desc') {
+                expenseData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                console.log(expenseData);
+                return;
+            }
         }
-        else if(opts.sort === 'desc'){
-            readData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+        if(opts.category){
+            const filteredData = expenseData.filter(expenseCategory => expenseCategory.category === opts.category);
+            console.log(filteredData);
+            return;
         }
-        console.log(readData);
+        console.log(expenseData);
     })
 
 program.parse();
