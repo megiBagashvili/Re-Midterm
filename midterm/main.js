@@ -149,6 +149,42 @@ program
     })
 
 //დამატებითი ფუნქციონალები, რომლებიც ჩემი აზრით, "გამოადგება" ამ CLI-ს.
+program
+    .command('total')
+    .description('calculates total expenses in the expenses file')
+    .action(async () => {
+        const currentExpenses = await readFile('expenses.json', true);
+        const total = currentExpenses.reduce((acc, expense) => acc + expense.price, 0);
+        console.log(`Seems like someone likes to spend. Total expenses are ${total} GEL`);
+    })
 
 
+program
+    .command('totalByCategory')
+    .description('calculates total expenses for a given category')
+    .argument('<category>', 'category to calculate total expenses for')
+    .action(async (category) => {
+        const currentExpenses = await readFile('expenses.json', true);
+        const filteredExpenses = currentExpenses.filter(exp => exp.category === category);
+        if (filteredExpenses.length === 0) {
+            console.log(`No expenses found for category ${category}.`);
+            return;
+        }
+        const total = filteredExpenses.reduce((acc, expense) => acc + expense.price, 0);
+        console.log(`Total expenses for category ${category} are ${total} GEL`);
+    })
+
+program
+    .command('categories')
+    .description('lists where user has been spending money. a.k.a, categories of expenses')
+    .action(async () => {
+        const currentExpenses = await readFile('expenses.json', true);
+        let categories = [];
+        currentExpenses.forEach(exp => {
+            if (!categories.includes(exp.category)) {
+                categories.push(exp.category);
+            }
+        });
+        console.log(categories)
+    })
 program.parse();
