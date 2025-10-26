@@ -12,7 +12,7 @@ program
 
 program
     .command('show')
-    .option('-s, --sort <sort>', 'return sorted expenses by price', '')
+    .option('-s, --sort <sort>', 'return sorted expenses by createdAt', '')
     .option('-c, --category <category>', 'shows expenses that match given category', '')
     .option('-p, --page <page>', 'shows one specified page of expenses', '1')
     .option('-t, --take <take>', 'number of expenses to show on single page', '3')
@@ -81,7 +81,7 @@ program
             console.log(`Eexpense with id ${id} not found.`);
             return;
         }
-        const updatedExpenses = currentExpenses.filter(el => el !== expenseToBeDeleted);
+        const updatedExpenses = currentExpenses.filter(el => el.id !== Number(id));
         await writeFile('expenses.json', updatedExpenses);
     })
 
@@ -133,6 +133,10 @@ program
             updateReq['category'] = opts.category
         }
         if(opts.price){
+            if(Number(opts.price) < 10){
+                console.log('cannot update expense. Amount must be 10 minimum.');
+                return;
+            }
             updateReq['price'] = Number(opts.price)
         }
         currentExpenses[indexToUpdate] = {
