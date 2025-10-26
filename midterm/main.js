@@ -20,6 +20,10 @@ program
 
         if (opts.category) {
             const filteredData = expenseData.filter(expenseCategory => expenseCategory.category === opts.category);
+            if(filteredData.length === 0){
+                console.log(`No expenses found for category ${opts.category}`);
+                return;
+            }
             console.log(filteredData);
             return;
         }
@@ -91,6 +95,20 @@ program
         }
         console.log(targetExpense);
 
+    })
+
+program
+    .command('search')
+    .description('searches expenses by date created')
+    .argument('<date>', 'date to search expenses by (YYYY-MM-DD)')
+    .action(async (date) => {
+        const currentExpenses = await readFile('./expenses.json', true);
+        const targetExpenses = currentExpenses.filter(exp => exp.createdAt.startsWith(date));
+        if (targetExpenses.length === 0) {
+            console.log(`No expenses found for date ${date}.`);
+            return;
+        }
+        console.log(targetExpenses);
     })
 
 program.parse();
