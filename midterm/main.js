@@ -78,4 +78,19 @@ program
         await writeFile('./expenses.json', updatedExpenses);
     })
 
+program
+    .command('getById')
+    .description('retrieves element matching the given id')
+    .argument('<id>', 'id of expense')
+    .action(async (id) => {
+        const currentExpenses = await readFile('./expenses.json', true);
+        const targetExpense = currentExpenses.find(exp => exp.id === Number(id));
+        if (!targetExpense) {
+            console.log(`Expense with id ${id} not found.`);
+            return;
+        }
+        console.log(targetExpense);
+
+    })
+
 program.parse();
